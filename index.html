@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <form id="new-task-form">
+            <input type="text" id="new-task-input" placeholder="Add a new task">
+            <button type="submit">Add Task</button>
+        </form>
+        <ul id="task-list"></ul>
+    </div>
+
+    <script>
+        document.getElementById('new-task-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            addTask();
+        });
+
+        function addTask() {
+            const taskInput = document.getElementById('new-task-input');
+            const taskText = taskInput.value.trim();
+            if (taskText === '') return;
+
+            const taskList = document.getElementById('task-list');
+            const listItem = document.createElement('li');
+            listItem.className = 'task-item';
+
+            const taskLabel = document.createElement('span');
+            taskLabel.className = 'task-label';
+            taskLabel.textContent = taskText;
+
+            const editInput = document.createElement('input');
+            editInput.type = 'text';
+            editInput.className = 'edit-input';
+            editInput.value = taskText;
+
+            const editButton = document.createElement('button');
+            editButton.className = 'edit-button';
+            editButton.textContent = 'Edit';
+            editButton.onclick = () => editTask(listItem, taskLabel, editInput, editButton);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'delete-button';
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = () => deleteTask(listItem);
+
+            const completeCheckbox = document.createElement('input');
+            completeCheckbox.type = 'checkbox';
+            completeCheckbox.className = 'complete-checkbox';
+            completeCheckbox.onchange = () => markCompleted(taskLabel, completeCheckbox);
+
+            listItem.appendChild(completeCheckbox);
+            listItem.appendChild(taskLabel);
+            listItem.appendChild(editInput);
+            listItem.appendChild(editButton);
+            listItem.appendChild(deleteButton);
+            taskList.appendChild(listItem);
+
+            taskInput.value = '';
+        }
+
+        function editTask(listItem, taskLabel, editInput, editButton) {
+            if (editButton.textContent === 'Edit') {
+                editButton.textContent = 'Save';
+                taskLabel.style.display = 'none';
+                editInput.style.display = 'inline';
+                editInput.focus();
+            } else {
+                editButton.textContent = 'Edit';
+                taskLabel.style.display = 'inline';
+                editInput.style.display = 'none';
+                taskLabel.textContent = editInput.value.trim();
+            }
+        }
+
+        function deleteTask(listItem) {
+            listItem.remove();
+        }
+
+        function markCompleted(taskLabel, completeCheckbox) {
+            if (completeCheckbox.checked) {
+                taskLabel.style.textDecoration = 'line-through';
+            } else {
+                taskLabel.style.textDecoration = 'none';
+            }
+        }
+    </script>
+    <footer>
+        <p>Created by Kiruthika</p>
+    </footer>
+</body>
+</html>
